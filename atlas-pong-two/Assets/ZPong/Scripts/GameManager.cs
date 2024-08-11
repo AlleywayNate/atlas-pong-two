@@ -5,7 +5,7 @@ namespace ZPong
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private float startDelay = 3f; // Adjust this to control delay before the ball starts
+        [SerializeField] private float startDelay = 3f;
         [SerializeField] private GameObject ballPrefab;
         [SerializeField] private GameObject canvasParent;
 
@@ -20,29 +20,13 @@ namespace ZPong
         private void Awake()
         {
             Instance = this;
+
             goals = new Goal[2];
         }
 
-        void SetGame()
+        private void Start()
         {
-            if (activeBall != null)
-            {
-                Destroy(activeBall.gameObject);
-            }
-
-            // Set initial position for the ball
-            Vector3 initialPosition = new Vector3(100, 0, 0); // Change to desired position
-            activeBall = Instantiate(ballPrefab, initialPosition, this.transform.rotation, canvasParent.transform)
-                .GetComponent<Ball>();
-            activeBall.GetComponent<RectTransform>().anchoredPosition = new Vector2(100, 0); // Change to desired position
-
-            aIPlayer.StartCoroutine(aIPlayer.StartDelay(1));
-        }
-
-        void StartGame()
-        {
-            // Debug.Log("Starting game!");
-            activeBall.SetBallActive(true);
+            Reset();
         }
 
         public void Reset()
@@ -51,23 +35,48 @@ namespace ZPong
             StartCoroutine(StartTimer());
         }
 
-        private void Start()
-        {
-            Reset();
-        }
-
-        IEnumerator StartTimer()
+        private IEnumerator StartTimer()
         {
             SetGame();
             yield return new WaitForSeconds(startDelay);
 
             SetBounds();
 
+            // Start the coroutine to launch the ball after a delay
+            if (activeBall != null)
+            {
+                StartCoroutine(activeBall.LaunchBallAfterDelay(1f));
+            }
+
             StartGame();
         }
 
-        void SetBounds()
+        private void SetGame()
         {
+            if (activeBall != null)
+            {
+                Destroy(activeBall.gameObject);
+            }
+
+            // Instantiate the ball and set its parent
+            activeBall = Instantiate(ballPrefab, Vector3.zero, Quaternion.identity, canvasParent.transform)
+                .GetComponent<Ball>();
+
+            // Ensure ball's position is centered
+            activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+            aIPlayer.StartCoroutine(aIPlayer.StartDelay(1));
+        }
+
+        private void StartGame()
+        {
+            // This function starts the ball movement and game
+            activeBall.SetBallActive(true);
+        }
+
+        private void SetBounds()
+        {
+            // Set the height bounds for the ball and goals
             activeBall.SetHeightBounds();
             foreach (var g in goals)
             {
@@ -82,26 +91,26 @@ namespace ZPong
 
         private IEnumerator ResetBallCoroutine()
         {
-            // Set reset position for the ball
-            Vector3 resetPosition = new Vector3(100, 0, 0); // Change to desired position
-            activeBall.transform.position = resetPosition;
-            activeBall.GetComponent<RectTransform>().anchoredPosition = new Vector2(100, 0); // Change to desired position
-            activeBall.SetBallActive(false);
+            // Reset ball's position and state
+            activeBall.transform.position = Vector3.zero;
+            activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            activeBall.DisableBall();
 
             yield return null;
 
+            // Start the timer again after resetting
             StartCoroutine(StartTimer());
         }
 
         public void SetGoalObj(Goal g)
         {
-            if (goals[0])
+            if (goals[0] == null)
             {
-                goals[1] = g;
+                goals[0] = g;
             }
             else
             {
-                goals[0] = g;
+                goals[1] = g;
             }
         }
     }

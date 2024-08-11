@@ -8,8 +8,8 @@ namespace ZPong
         public float speed = 5f;
         public float launchDelay = 1f; // Delay before launching the ball
 
-        private float screenTop = 527;
-        private float screenBottom = -527;
+        private float screenTop;
+        private float screenBottom;
 
         private Vector2 direction;
         private Vector2 defaultDirection;
@@ -23,9 +23,6 @@ namespace ZPong
         private void Start()
         {
             rectTransform = GetComponent<RectTransform>();
-
-            // Remove this line to avoid setting the position again in Start
-            // rectTransform.anchoredPosition = Vector2.zero;
 
             // Load saved ball speed from PlayerPrefs
             if (PlayerPrefs.HasKey("BallSpeed"))
@@ -73,9 +70,6 @@ namespace ZPong
             SetHeightBounds();
 
             bounceSFX = GetComponent<AudioSource>();
-
-            // Start the coroutine to launch the ball after a delay
-            StartCoroutine(LaunchBallAfterDelay(launchDelay));
         }
 
         private void Update()
@@ -105,7 +99,6 @@ namespace ZPong
             }
             else if (collision.gameObject.CompareTag("Goal"))
             {
-                // Debug.Log("pos: " + rectTransform.anchoredPosition.x);
                 // Left goal
                 if (rectTransform.anchoredPosition.x < -1)
                 {
@@ -127,7 +120,6 @@ namespace ZPong
         public void SetBallActive(bool value)
         {
             ballActive = value;
-            direction = defaultDirection;
         }
 
         public Vector2 GetPosition()
@@ -159,7 +151,7 @@ namespace ZPong
         }
 
         // Coroutine to launch the ball after a delay
-        private IEnumerator LaunchBallAfterDelay(float delay)
+        public IEnumerator LaunchBallAfterDelay(float delay)
         {
             yield return new WaitForSeconds(delay); // Wait for the specified delay
             isLaunched = true; // Set the ball as launched
