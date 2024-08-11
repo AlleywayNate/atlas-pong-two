@@ -3,10 +3,9 @@ using UnityEngine;
 
 namespace ZPong
 {
-
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private float startDelay = 3f;
+        [SerializeField] private float startDelay = 3f; // Adjust this to control delay before the ball starts
         [SerializeField] private GameObject ballPrefab;
         [SerializeField] private GameObject canvasParent;
 
@@ -20,33 +19,35 @@ namespace ZPong
 
         private void Awake()
         {
-                Instance = this;
-
+            Instance = this;
             goals = new Goal[2];
         }
 
         void SetGame()
         {
-            if(activeBall  != null){
+            if (activeBall != null)
+            {
                 Destroy(activeBall.gameObject);
             }
-            activeBall = Instantiate(ballPrefab, Vector3.zero, this.transform.rotation, canvasParent.transform)
-                    .GetComponent<Ball>();
-            activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+            // Set initial position for the ball
+            Vector3 initialPosition = new Vector3(100, 0, 0); // Change to desired position
+            activeBall = Instantiate(ballPrefab, initialPosition, this.transform.rotation, canvasParent.transform)
+                .GetComponent<Ball>();
+            activeBall.GetComponent<RectTransform>().anchoredPosition = new Vector2(100, 0); // Change to desired position
 
             aIPlayer.StartCoroutine(aIPlayer.StartDelay(1));
         }
 
         void StartGame()
         {
-            //Debug.Log("Starting game!");
+            // Debug.Log("Starting game!");
             activeBall.SetBallActive(true);
         }
 
         public void Reset()
         {
             ScoreManager.Instance.ResetGame();
-
             StartCoroutine(StartTimer());
         }
 
@@ -81,9 +82,10 @@ namespace ZPong
 
         private IEnumerator ResetBallCoroutine()
         {
-            // Simply reset the ball's position and state instead of destroying it
-            activeBall.transform.position = Vector3.zero;
-            activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            // Set reset position for the ball
+            Vector3 resetPosition = new Vector3(100, 0, 0); // Change to desired position
+            activeBall.transform.position = resetPosition;
+            activeBall.GetComponent<RectTransform>().anchoredPosition = new Vector2(100, 0); // Change to desired position
             activeBall.SetBallActive(false);
 
             yield return null;

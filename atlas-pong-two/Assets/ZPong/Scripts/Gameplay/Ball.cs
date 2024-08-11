@@ -21,62 +21,62 @@ namespace ZPong
         private AudioSource bounceSFX;
 
         private void Start()
-{
-    rectTransform = GetComponent<RectTransform>();
-
-    // Set the starting position of the ball to the center
-    rectTransform.anchoredPosition = Vector2.zero;
-
-    // Load saved ball speed from PlayerPrefs
-    if (PlayerPrefs.HasKey("BallSpeed"))
-    {
-        speed = PlayerPrefs.GetFloat("BallSpeed");
-    }
-
-    // Load saved ball size from PlayerPrefs
-    if (PlayerPrefs.HasKey("BallSize"))
-    {
-        var value = PlayerPrefs.GetFloat("BallSize");
-        rectTransform.sizeDelta = new Vector2(value, value);
-    }
-
-    // Load saved pitch direction from PlayerPrefs and set the ball's initial direction
-    if (PlayerPrefs.HasKey("PitchDirection"))
-    {
-        string pitchDirectionValue = PlayerPrefs.GetString("PitchDirection");
-
-        if (pitchDirectionValue == "Random")
         {
-            // Generate a random direction between -1 and 1 for the x-axis.
-            float randomX = Random.Range(-1f, 1f);
-            direction = new Vector2(randomX, 0f).normalized;
+            rectTransform = GetComponent<RectTransform>();
+
+            // Remove this line to avoid setting the position again in Start
+            // rectTransform.anchoredPosition = Vector2.zero;
+
+            // Load saved ball speed from PlayerPrefs
+            if (PlayerPrefs.HasKey("BallSpeed"))
+            {
+                speed = PlayerPrefs.GetFloat("BallSpeed");
+            }
+
+            // Load saved ball size from PlayerPrefs
+            if (PlayerPrefs.HasKey("BallSize"))
+            {
+                var value = PlayerPrefs.GetFloat("BallSize");
+                rectTransform.sizeDelta = new Vector2(value, value);
+            }
+
+            // Load saved pitch direction from PlayerPrefs and set the ball's initial direction
+            if (PlayerPrefs.HasKey("PitchDirection"))
+            {
+                string pitchDirectionValue = PlayerPrefs.GetString("PitchDirection");
+
+                if (pitchDirectionValue == "Random")
+                {
+                    // Generate a random direction between -1 and 1 for the x-axis.
+                    float randomX = Random.Range(-1f, 1f);
+                    direction = new Vector2(randomX, 0f).normalized;
+                }
+                else if (pitchDirectionValue == "Right")
+                {
+                    // Set the direction to move right.
+                    direction = new Vector2(1f, 0f);
+                }
+                else
+                {
+                    // Default to moving left if the value is not recognized.
+                    direction = new Vector2(-1f, 0f);
+                }
+            }
+            else
+            {
+                // Default to moving left if no value is found in PlayerPrefs.
+                direction = new Vector2(-1f, 0f);
+            }
+
+            defaultDirection = direction;
+
+            SetHeightBounds();
+
+            bounceSFX = GetComponent<AudioSource>();
+
+            // Start the coroutine to launch the ball after a delay
+            StartCoroutine(LaunchBallAfterDelay(launchDelay));
         }
-        else if (pitchDirectionValue == "Right")
-        {
-            // Set the direction to move right.
-            direction = new Vector2(1f, 0f);
-        }
-        else
-        {
-            // Default to moving left if the value is not recognized.
-            direction = new Vector2(-1f, 0f);
-        }
-    }
-    else
-    {
-        // Default to moving left if no value is found in PlayerPrefs.
-        direction = new Vector2(-1f, 0f);
-    }
-
-    defaultDirection = direction;
-
-    SetHeightBounds();
-
-    bounceSFX = GetComponent<AudioSource>();
-
-    // Start the coroutine to launch the ball after a delay
-    StartCoroutine(LaunchBallAfterDelay(launchDelay)); // New line added
-}
 
         private void Update()
         {
@@ -159,7 +159,7 @@ namespace ZPong
         }
 
         // Coroutine to launch the ball after a delay
-        private IEnumerator LaunchBallAfterDelay(float delay) // New coroutine added
+        private IEnumerator LaunchBallAfterDelay(float delay)
         {
             yield return new WaitForSeconds(delay); // Wait for the specified delay
             isLaunched = true; // Set the ball as launched
