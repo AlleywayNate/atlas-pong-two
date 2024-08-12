@@ -7,57 +7,46 @@ namespace ZPong
     {
         public float speed = 5f;
         public float launchDelay = 1f;
-
         private float screenTop;
         private float screenBottom;
         private Vector2 direction;
         private bool ballActive;
         private bool isLaunched = false;
-
-        protected RectTransform rectTransform;
         private AudioSource bounceSFX;
-
         private Vector2 defaultDirection;
-        public Ball activeBall;
+        protected RectTransform rectTransform; // Ensuring accessibility to derived classes
 
-        void StartGame()
-        {
-        activeBall.SetBallActive(true); // This should make the ball active and start moving
-        }
 
-        public void DisableBall()
-        {
-            ballActive = false; // This will stop the ball from moving
-            // Optionally, you can also hide the ball or disable its collision if needed
-            gameObject.SetActive(false); // Disables the ball GameObject
-        }
-
-        protected float BallHitPaddleWhere(Vector2 ball, Vector2 paddle, float paddleHeight)
-        {
-            return (ball.y - paddle.y) / paddleHeight;
-        }
-
-        public Vector2 GetPosition()
+        protected Vector2 RetrievePosition() // Changed to protected
         {
             return rectTransform.anchoredPosition;
         }
-
-        public void Reflect(Vector2 newDirection)
+        public void Reflect(Vector2 newDirection) // Ensure this is accessible
         {
             direction = newDirection.normalized;
         }
-
-        private void Awake()
+        protected float BallHitPaddleWhere(Vector2 ball, Vector2 paddle, float paddleHeight) // Ensure accessibility
         {
-            rectTransform = GetComponent<RectTransform>();
+            return (ball.y - paddle.y) / paddleHeight;
+        }
+        protected Vector2 GetPosition() // Ensure this is protected or public
+        {
+            return rectTransform.anchoredPosition;
+        }
+        public void DisableBall()
+        {
+            // Your logic for disabling the ball
+            gameObject.SetActive(false);
         }
 
-        private void Start()
+        void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
             bounceSFX = GetComponent<AudioSource>();
+        }
 
-            // Initialization of direction and defaultDirection
+        void Start()
+        {
             if (PlayerPrefs.HasKey("PitchDirection"))
             {
                 string pitchDirectionValue = PlayerPrefs.GetString("PitchDirection");
@@ -83,9 +72,10 @@ namespace ZPong
             defaultDirection = direction; // Set defaultDirection after initializing direction
 
             SetHeightBounds();
+            StartCoroutine(LaunchBallAfterDelay(launchDelay)); // Start the launch coroutine
         }
 
-        private void Update()
+        void Update()
         {
             if (ballActive && isLaunched)
             {
@@ -103,7 +93,10 @@ namespace ZPong
         public void SetBallActive(bool value)
         {
             ballActive = value;
-            direction = defaultDirection;
+            if (value)
+            {
+                direction = defaultDirection;
+            }
             Debug.Log($"Ball Active: {ballActive}, Direction: {direction}");
         }
 
@@ -117,25 +110,6 @@ namespace ZPong
             var height = UIScaler.Instance.GetUIHeightPadded();
             screenTop = height / 2;
             screenBottom = -1 * height / 2;
-        }
-
-        private void LoadSettings()
-        {
-            if (PlayerPrefs.HasKey("BallSpeed"))
-                speed = PlayerPrefs.GetFloat("BallSpeed");
-
-            if (PlayerPrefs.HasKey("BallSize"))
-                rectTransform.sizeDelta = new Vector2(PlayerPrefs.GetFloat("BallSize"), PlayerPrefs.GetFloat("BallSize"));
-
-            if (PlayerPrefs.HasKey("PitchDirection"))
-            {
-                string pitchDirectionValue = PlayerPrefs.GetString("PitchDirection");
-                direction = pitchDirectionValue == "Right" ? new Vector2(1f, 0f) : new Vector2(-1f, 0f);
-            }
-            else
-            {
-                direction = new Vector2(-1f, 0f);
-            }
         }
 
         private void CheckBounds()
@@ -152,11 +126,11 @@ namespace ZPong
             if (collision.gameObject.CompareTag("Paddle"))
             {
                 Paddle paddle = collision.gameObject.GetComponent<Paddle>();
-                
-                Vector2 ballPosition = GetPosition();
+
+                Vector2 ballPosition = RetrievePosition(); // Use RetrievePosition
                 float y = BallHitPaddleWhere(ballPosition, paddle.AnchorPos(),
                     paddle.GetComponent<RectTransform>().sizeDelta.y / 2f);
-                
+
                 Vector2 newDirection = new Vector2(paddle.isLeftPaddle ? 1f : -1f, y);
                 Reflect(newDirection);
                 PlayBounceSound();
