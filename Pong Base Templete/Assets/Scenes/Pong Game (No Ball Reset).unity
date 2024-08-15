@@ -478,7 +478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcf0f021e6aa024428af4600edab959b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreToReach: 0
+  scoreToReach: 50
   player1ScoreText: {fileID: 1466029787}
   player2ScoreText: {fileID: 2039295954}
 --- !u!1 &364770308
@@ -794,8 +794,8 @@ GameObject:
   - component: {fileID: 598272626}
   - component: {fileID: 598272625}
   - component: {fileID: 598272628}
-  - component: {fileID: 598272629}
-  - component: {fileID: 598272630}
+  - component: {fileID: 598272631}
+  - component: {fileID: 598272632}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -932,7 +932,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.15
---- !u!114 &598272629
+--- !u!114 &598272631
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -941,14 +941,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 598272624}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d041d92524919946a8c58a773a55ff8, type: 3}
+  m_Script: {fileID: 11500000, guid: d054d052a0245714d8b27af7b634671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   startSpeed: 5
   extraSpeed: 1
-  maxExtraSpeed: 50
+  maxExtraSpeed: 100
   player1Start: 1
---- !u!114 &598272630
+--- !u!114 &598272632
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -957,11 +957,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 598272624}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7b45f52986dea541a50570d43a4a22b, type: 3}
+  m_Script: {fileID: 11500000, guid: fd6605a1197ac5e45a34a34cf076cafa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitSFX: {fileID: 8796344797224272411, guid: 014792ee49926154e929de4c4a4362d1, type: 3}
-  ballMovement: {fileID: 598272629}
+  hitSFX: {fileID: 0}
+  noBallReset: {fileID: 598272631}
   scoreManager: {fileID: 286126036}
 --- !u!1 &1315316230
 GameObject:

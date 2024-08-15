@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BallBounce : MonoBehaviour
+public class BallBounceMore : MonoBehaviour
 {
-    public BallMovement ballMovement;
+    public GameObject hitSFX;
+    public NoBallReset noBallReset;
     public ScoreManager scoreManager;
     private void Bounce(Collision2D collision)
     {
@@ -24,8 +25,8 @@ public class BallBounce : MonoBehaviour
 
         float positionY = (ballPosition.y - racketPosition.y) / racketHeight;
 
-        ballMovement.IncreaseHitCounter();
-        ballMovement.MoveBall(new Vector2(positionX, positionY));
+        noBallReset.IncreaseHitCounter();
+        noBallReset.MoveBall(new Vector2(positionX, positionY));
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

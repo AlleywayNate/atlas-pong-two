@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 
-public class BallMovement : MonoBehaviour
+public class NoBallReset : MonoBehaviour
 {
     public float startSpeed;
     public float extraSpeed;
     public float maxExtraSpeed;
+    public bool player1Start = true;
 
     private int hitCounter = 0;
 
