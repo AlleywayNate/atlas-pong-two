@@ -478,7 +478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcf0f021e6aa024428af4600edab959b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreToReach: 50
+  scoreToReach: 100
   player1ScoreText: {fileID: 1466029787}
   player2ScoreText: {fileID: 2039295954}
 --- !u!1 &364770308
@@ -960,7 +960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd6605a1197ac5e45a34a34cf076cafa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitSFX: {fileID: 0}
+  hitSFX: {fileID: 8796344797224272411, guid: 014792ee49926154e929de4c4a4362d1, type: 3}
   noBallReset: {fileID: 598272631}
   scoreManager: {fileID: 286126036}
 --- !u!1 &1315316230
